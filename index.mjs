@@ -1,24 +1,13 @@
 #! /usr/bin/env node
+import { getArgs } from './args-utilities.mjs'
+import { findVaultsPaths } from './folder-utilities.mjs'
+import { ImageManager } from './image-manager.mjs'
 
-// console.log(process.cwd());
-import { Command } from 'commander';
-import figlet from "figlet";
+const args = getArgs();
 
-console.log(figlet.textSync("Dendron Move Images"));
+const vaultPaths = await findVaultsPaths('secondary-vault');
+const primaryVaultMgr = new ImageManager(vaultPaths.primaryVaultPath);
+const secondaryVaultMgr = new ImageManager(vaultPaths.secondaryVaultPath);
 
-const program = new Command();
-program
-  .name('dendron-move-images')
-  .description('Utility to move dendron images')
-  .version('0.1.0');
-
-program
-  .option('-svn, --secondary-vault-name [type]', 'Add secondary vault name')
-  .option('-svdf, --secondary-vault-dendron-folder [type]', 'Add secondary vault dendron folder')
-
-program.parse();
-const options = program.opts();
-// console.log('secondaryVaultName', options.secondaryVaultName);
-// console.log('secondaryVaultDendronFolder', options.secondaryVaultDendronFolder);
-
- 
+console.log(primaryVaultMgr);
+console.log(secondaryVaultMgr);
