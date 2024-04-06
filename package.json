@@ -7,7 +7,7 @@
     "dmi": "./index.mjs"
   },
   "scripts": {
-    "dev": "node index.mjs",
+    "dev": "node index.mjs --svn=secondary-vault",
     "test": "node --test test/test.mjs"
   },
   "keywords": [],

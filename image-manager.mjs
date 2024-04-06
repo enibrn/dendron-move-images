@@ -2,7 +2,11 @@ import path from 'path';
 import fs from 'fs';
 
 export class ImageManager {
+	imagesFolderPath;
+	notesFolderPath;
+
 	imagesInAssets = [];
+
 	localImagesInNotes = [];
 	unknownImagesInNotes = [];
 
@@ -10,29 +14,34 @@ export class ImageManager {
 	unusedImages = [];
 
 	constructor(notesFolderPath) {
-		this.#setImagesInAssets(notesFolderPath);
-		this.#setImagesInNotes(notesFolderPath);
-		this.#setMissingUnusedImages();
+		this.#setPaths(notesFolderPath);
+		this.#setImagesInAssets();
+		this.#setImagesInNotes();
+		this.#setMissingAndUnusedImages();
 	}
 
-	#setImagesInAssets(notesFolderPath) {
-		const imagesFolderPath = path.join(notesFolderPath, './assets/images/');
+	#setPaths(notesFolderPath) {
+		this.notesFolderPath = notesFolderPath;
+		this.imagesFolderPath = path.join(notesFolderPath, './assets/images/');
+	}
+
+	#setImagesInAssets() {
 		this.imagesInAssets = fs
-			.readdirSync(imagesFolderPath, { withFileTypes: true })
+			.readdirSync(this.imagesFolderPath, { withFileTypes: true })
 			.map(dirent => ({ name: dirent.name, path: path.join(dirent.path, dirent.name) }));
 	}
 
-	#setImagesInNotes(notesFolderPath) {
+	#setImagesInNotes() {
 		const imageRegex = /!\[([^\]]+)\]\(([^)]+)\)/g;
 		const webPrefixes = ['http://', 'https://'];
 		const validLocalPrefixes = ['./assets/images/', 'assets/images/'];
 
 		const markdownFiles = fs
-			.readdirSync(notesFolderPath)
+			.readdirSync(this.notesFolderPath)
 			.filter(file => file.endsWith('.md'));
 
 		markdownFiles.forEach(file => {
-			const filePath = path.join(notesFolderPath, file);
+			const filePath = path.join(this.notesFolderPath, file);
 			const fileContent = fs.readFileSync(filePath, 'utf-8');
 
 			let match;
@@ -60,11 +69,19 @@ export class ImageManager {
 		}
 	}
 
-	#setMissingUnusedImages() {
-		const localImageNamesInNotes = this.localImagesInNotes.map(x => x.name.toLowerCase());
-		const imageNamesInAssets = this.imagesInAssets.map(x => x.name.toLowerCase());
+	#setMissingAndUnusedImages() {
+		const localImageNamesInNotes = this.localImagesInNotes
+			.map(x => x.name.toLowerCase());
+		//removes duplicates (works only with primitives)
+		const localImageNamesInNotesDistinct = [...new Set(localImageNamesInNotes)];
 
-		this.missingImages = localImageNamesInNotes.filter(x => !imageNamesInAssets.includes(x));
-		this.unusedImages = imageNamesInAssets.filter(x => !localImageNamesInNotes.includes(x));
+		const imageNamesInAssets = this.imagesInAssets
+			.map(x => x.name.toLowerCase());
+		const imageNamesInAssetsDistinct = [...new Set(imageNamesInAssets)];
+
+		this.missingImages = localImageNamesInNotesDistinct
+			.filter(x => !imageNamesInAssetsDistinct.includes(x));
+		this.unusedImages = imageNamesInAssetsDistinct
+			.filter(x => !localImageNamesInNotesDistinct.includes(x));
 	}
 }

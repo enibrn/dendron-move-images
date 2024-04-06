@@ -8,4 +8,4 @@ Il nostro pianeta! La Terra ha acqua liquida, atmosfera respirabile e una grande
 
 Venere è simile alla Terra per dimensioni e massa, ma presenta notevoli differenze nell’atmosfera e nel clima.
 
-![Terra VS Venere](assets/images/terra-vs-venere.jpg)
+![Terra VS Venere](./assets/images/terra-vs-venere.jpg)

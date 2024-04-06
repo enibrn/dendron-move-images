@@ -31,3 +31,41 @@ export function findVaultNotesPaths(options) {
 
 	return result;
 }
+
+export function syncFiles(primaryVaultMgr, secondaryVaultMgr) {
+	for (const missingImageName of secondaryVaultMgr.missingImages) {
+		const srcImagePath = path.join(primaryVaultMgr.imagesFolderPath, missingImageName);
+
+		if (!fs.existsSync(srcImagePath)) {
+			continue;
+		}
+
+		const destImagePath = path.join(secondaryVaultMgr.imagesFolderPath, missingImageName);
+		fs.copyFileSync(srcImagePath, destImagePath);
+
+		if (primaryVaultMgr.unusedImages.includes(missingImageName)) {
+			fs.rmSync(srcImagePath)
+		}
+	}
+}
+
+export function syncFilesSimulation(primaryVaultMgr, secondaryVaultMgr) {
+	const toCopy = [];
+	const toRemove = [];
+
+	for (const missingImageName of secondaryVaultMgr.missingImages) {
+		const srcImagePath = path.join(primaryVaultMgr.imagesFolderPath, missingImageName);
+
+		if (!fs.existsSync(srcImagePath)) {
+			continue;
+		}
+
+		toCopy.push(missingImageName);
+
+		if (primaryVaultMgr.unusedImages.includes(missingImageName)) {
+			toRemove.push(missingImageName);
+		}
+	}
+
+	return { toCopy, toRemove };
+}
