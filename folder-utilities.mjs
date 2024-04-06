@@ -1,32 +1,33 @@
-import { readdir } from 'node:fs/promises';
+import fs from 'fs';
 import path from 'path';
 
-export async function findVaultsPaths(secondaryVaultName) {
-	const currentPath = process.cwd();
-	const result = {};
+export function findVaultNotesPaths(options) {
+	const currentPath = options?.currentPath ?? process.cwd();
 
-	const allNotesFolders = (await readdir(currentPath, { recursive: true, withFileTypes: true }))
+	const allNotesFolders = fs
+		.readdirSync(currentPath, { recursive: true, withFileTypes: true })
 		.filter(dirent => dirent.isDirectory() && dirent.name == 'notes')
 		.map(dirent => ({
 			fullPath: path.join(dirent.path, dirent.name),
 			relativePathSteps: path.relative(currentPath, dirent.path).split('\\')
 		}));
 
-	result.primaryVaultPath = allNotesFolders
+	const result = {};
+
+	result.primaryVaultNotesPath = allNotesFolders
 		.find(x => !x.relativePathSteps.includes('dependencies'))
 		?.fullPath;
 
 	const secondaryVaultEntries = allNotesFolders
 		.filter(x => x.relativePathSteps.includes('dependencies'));
-
-	result.secondaryVaultPath = secondaryVaultName
+	result.secondaryVaultNotesPath = options?.secondaryVaultName
 		? secondaryVaultEntries
 			.find(el => el
 				.relativePathSteps
 				.splice(secondaryVaultEntries.indexOf('dependencies'))
-				.includes(secondaryVaultName))
+				.includes(options.secondaryVaultName))
 			?.fullPath
-		: secondaryVaultEntries[0]?.fullPath;
+		: secondaryVaultEntries[0]?.fullPath; //if not provided take the first one found
 
 	return result;
 }
