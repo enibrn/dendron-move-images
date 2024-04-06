@@ -15,7 +15,8 @@ const primaryVaultMgr = new ImageManager(vaultPaths.primaryVaultNotesPath);
 const secondaryVaultMgr = new ImageManager(vaultPaths.secondaryVaultNotesPath);
 
 if (await haveToSync(args, primaryVaultMgr, secondaryVaultMgr)) {
-  console.log("do the sync");
+  syncFiles(primaryVaultMgr, secondaryVaultMgr);
+  console.log("Sync done.");
 }
 
 async function haveToSync(args, primaryVaultMgr, secondaryVaultMgr) {
@@ -27,21 +28,21 @@ async function haveToSync(args, primaryVaultMgr, secondaryVaultMgr) {
   const nothingToCopy = simResult.toCopy.length === 0;
   const nothingToRemove = simResult.toRemove.length === 0;
   if (nothingToCopy && nothingToRemove) {
-    console.log('Nothing to sync');
+    console.log('Nothing to sync.');
     return false;
   }
 
   if (nothingToCopy) {
-    console.log('Nothing to copy');
+    console.log('Nothing to copy from primary vault to secondary vault.');
   } else {
-    console.log('Images to copy:');
+    console.log('Images to copy from primary vault to secondary vault:');
     console.log(simResult.toCopy);
   }
 
   if (nothingToRemove) {
-    console.log('Nothing to remove');
+    console.log('Nothing to remove from primary vault.');
   } else {
-    console.log('Images to remove:');
+    console.log('Images to remove from primary vault:');
     console.log(simResult.toRemove);
   }
 
