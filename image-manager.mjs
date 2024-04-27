@@ -34,7 +34,7 @@ export class ImageManager {
 	#setImagesInNotes() {
 		const imageRegex = /!\[([^\]]+)\]\(([^)]+)\)/g;
 		const webPrefixes = ['http://', 'https://'];
-		const validLocalPrefixes = ['./assets/images/', 'assets/images/'];
+		const validLocalPrefixes = ['./assets/images/','/assets/images/', 'assets/images/'];
 
 		const markdownFiles = fs
 			.readdirSync(this.notesFolderPath)

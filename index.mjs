@@ -14,6 +14,11 @@ const vaultPaths = findVaultNotesPaths(options);
 const primaryVaultMgr = new ImageManager(vaultPaths.primaryVaultNotesPath);
 const secondaryVaultMgr = new ImageManager(vaultPaths.secondaryVaultNotesPath);
 
+if (args.l) {
+  console.log(primaryVaultMgr);
+  console.log(secondaryVaultMgr);
+}
+
 if (await haveToSync(args, primaryVaultMgr, secondaryVaultMgr)) {
   syncFiles(primaryVaultMgr, secondaryVaultMgr);
   console.log("Sync done.");
