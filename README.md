@@ -1,5 +1,10 @@
 # Dendron Move Images
 
+## Terminology
+
+- **primary vault**: the main vault from where I upstream notes
+- **secondary vault**: one of the vault in the dependencies which will receive the notes moved from the primary vault
+
 ## Why
 
 When I move notes from a vault to another one using the [move note command](https://wiki.dendron.so/notes/98ywiw4211q9sx0v98lbo88/), any images in the notes had to be moved manually and then eventually removed from the first one if not referenced anymore (to clean up space).
@@ -8,9 +13,14 @@ Thats particularly unpleasant when there are a lot of notes to be moved, especia
 
 So I built a script that does that automatically.
 
+## Scopes
+
+- Notes are moved from the primary vault to the secondary vault only
+- Only images are 
+
 ## Practical example
 
-I want to move `macosx.md` note to `secondary-vault`
+I want to move `macosx.md` note to secondary-vault
 
 ### Initial structure
 
@@ -117,12 +127,12 @@ Ideally, this script would be an npm package to be installed in the `primary-vau
   ```shell
   npm link
   ```
-- Go to your dendron main vault
+- Go to your dendron primary vault
 - Link on the other side
   ```shell
   npm link dendron-move-images
   ```
-- Run command with standard settings (while still in dendron main vault)
+- Run command with standard settings (while still in dendron primary vault)
   ```shell
   dmi
   ```
@@ -150,6 +160,12 @@ Will be
 ## Todo
 
 - Images relative path shoud be customizable
-- Crashes if any folder in the path `assets/images` does not exist, it should create them instead
-- More tests
+- It crashes if any folder in the path `assets/images` does not exist, it should create them instead
+- Refactor tests
+- Tests with images in comment blocks and remote images from the web
+- Not tested with the youtube preview image format
+  ```
+  Example:
+  [![Developers](http://img.youtube.com/vi/KMU0tzLwhbE/1.jpg)](http://www.youtube.com/watch?v=KMU0tzLwhbE)
+  ```
 - npm package
