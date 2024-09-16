@@ -133,8 +133,13 @@ describe("dendron move notes", () => {
 
     const primaryVaultMgr = new ImageManager(vaultPaths.primaryVaultNotesPath);
     const secondaryVaultMgr = new ImageManager(vaultPaths.secondaryVaultNotesPath);
-    console.log(primaryVaultMgr);
-    console.log(secondaryVaultMgr);
+
+    //check WrongPaths
+    const expectedWrongCaseLinks = [{
+      fileImage: 'sistema-solare-1.jpeg',
+      wrongCaseLinks: ['Sistema-Solare-1.jpeg']
+    }];
+    assert.deepStrictEqual(primaryVaultMgr.wrongCaseImages, expectedWrongCaseLinks);
 
     //syncFilesSimulation tests
     const simResult = syncFilesSimulation(primaryVaultMgr, secondaryVaultMgr);

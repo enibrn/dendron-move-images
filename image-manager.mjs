@@ -12,6 +12,7 @@ export class ImageManager {
 
 	missingImages = [];
 	unusedImages = [];
+	wrongCaseImages = [];
 
 	constructor(notesFolderPath) {
 		this.#setPaths(notesFolderPath);
@@ -34,7 +35,7 @@ export class ImageManager {
 	#setImagesInNotes() {
 		const imageRegex = /!\[([^\]]+)\]\(([^)]+)\)/g;
 		const webPrefixes = ['http://', 'https://'];
-		const validLocalPrefixes = ['./assets/images/','/assets/images/', 'assets/images/'];
+		const validLocalPrefixes = ['./assets/images/', '/assets/images/', 'assets/images/'];
 
 		const markdownFiles = fs
 			.readdirSync(this.notesFolderPath)
@@ -70,18 +71,24 @@ export class ImageManager {
 	}
 
 	#setMissingAndUnusedImages() {
-		const localImageNamesInNotes = this.localImagesInNotes
-			.map(x => x.name);
+		const localImageNamesInNotes = this.localImagesInNotes.map(x => x.name);
 		//removes duplicates (works only with primitives)
 		const localImageNamesInNotesDistinct = [...new Set(localImageNamesInNotes)];
 
-		const imageNamesInAssets = this.imagesInAssets
-			.map(x => x.name);
-		const imageNamesInAssetsDistinct = [...new Set(imageNamesInAssets)];
+		const imageNamesInAssets = this.imagesInAssets.map(x => x.name);
 
 		this.missingImages = localImageNamesInNotesDistinct
-			.filter(x => !imageNamesInAssetsDistinct.includes(x));
-		this.unusedImages = imageNamesInAssetsDistinct
+			.filter(x => !imageNamesInAssets.includes(x));
+		this.unusedImages = imageNamesInAssets
 			.filter(x => !localImageNamesInNotesDistinct.includes(x));
+
+		this.wrongCaseImages = imageNamesInAssets
+			.map(fileImage => {
+				const wrongCaseLinks = localImageNamesInNotesDistinct
+					.filter(noteImage => noteImage.toLowerCase() === fileImage.toLowerCase() && noteImage !== fileImage);
+
+				return { fileImage, wrongCaseLinks };
+			})
+			.filter(x => x.wrongCaseLinks.length > 0);
 	}
 }
