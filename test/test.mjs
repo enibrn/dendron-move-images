@@ -133,11 +133,13 @@ describe("dendron move notes", () => {
 
     const primaryVaultMgr = new ImageManager(vaultPaths.primaryVaultNotesPath);
     const secondaryVaultMgr = new ImageManager(vaultPaths.secondaryVaultNotesPath);
+    console.log(primaryVaultMgr);
+    console.log(secondaryVaultMgr);
 
     //syncFilesSimulation tests
     const simResult = syncFilesSimulation(primaryVaultMgr, secondaryVaultMgr);
 
-    const expectedToCopy = ['terra.jpg', 'terra-vs-venere.jpg'];
+    const expectedToCopy = ['terra.jpg', 'Terra-vs-Venere.jpg'];
     assert.strictEqual(areEqualRegardlessOrder(simResult.toCopy, expectedToCopy), true);
 
     const expectedToRemove = ['terra.jpg'];

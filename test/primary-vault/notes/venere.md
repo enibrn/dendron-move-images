@@ -24,4 +24,4 @@ Ecco alcune somiglianze e differenze tra Venere e la Terra:
    - Venere è il pianeta più luminoso nel cielo notturno dopo la Luna e può essere visto poco dopo il tramonto o poco prima dell'alba ⁴.
    - Spesso è stato chiamato dagli antichi Greci "stella della sera" o "stella del mattino" ⁴.
 
-![Terra VS Venere](assets/images/terra-vs-venere.jpg)
+![Terra VS Venere](assets/images/Terra-vs-Venere.jpg)

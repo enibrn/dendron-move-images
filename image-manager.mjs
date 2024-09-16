@@ -71,12 +71,12 @@ export class ImageManager {
 
 	#setMissingAndUnusedImages() {
 		const localImageNamesInNotes = this.localImagesInNotes
-			.map(x => x.name.toLowerCase());
+			.map(x => x.name);
 		//removes duplicates (works only with primitives)
 		const localImageNamesInNotesDistinct = [...new Set(localImageNamesInNotes)];
 
 		const imageNamesInAssets = this.imagesInAssets
-			.map(x => x.name.toLowerCase());
+			.map(x => x.name);
 		const imageNamesInAssetsDistinct = [...new Set(imageNamesInAssets)];
 
 		this.missingImages = localImageNamesInNotesDistinct
